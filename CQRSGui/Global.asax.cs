@@ -35,11 +35,6 @@ namespace CQRSGui
             var storage = new EventStore(bus);
             var rep = new Repository<InventoryItem>(storage);
             var commands = new InventoryCommandHandlers(rep);
-            bus.RegisterHandler<CheckInItemsToInventory>(commands.Handle);
-            //bus.RegisterHandler<CreateInventoryItem>(commands.Handle);
-            bus.RegisterHandler<DeactivateInventoryItem>(commands.Handle);
-            bus.RegisterHandler<RemoveItemsFromInventory>(commands.Handle);
-            bus.RegisterHandler<RenameInventoryItem>(commands.Handle);
             var detail = new InventoryItemDetailView();
             bus.RegisterHandler<InventoryItemCreated>(detail.Handle);
             bus.RegisterHandler<InventoryItemDeactivated>(detail.Handle);

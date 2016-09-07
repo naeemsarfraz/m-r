@@ -4,7 +4,11 @@ using System;
 namespace SimpleCQRS
 {
     public class InventoryCommandHandlers: 
-        IRequestHandler<CreateInventoryItem, Unit>
+        IRequestHandler<CreateInventoryItem, Unit>,
+        IRequestHandler<DeactivateInventoryItem, Unit>,
+        IRequestHandler<RemoveItemsFromInventory, Unit>,
+        IRequestHandler<CheckInItemsToInventory, Unit>,
+        IRequestHandler<RenameInventoryItem, Unit>
     {
         private readonly IRepository<InventoryItem> _repository;
 
@@ -21,32 +25,40 @@ namespace SimpleCQRS
             return Unit.Value;
         }
 
-        public void Handle(DeactivateInventoryItem message)
+        public Unit Handle(DeactivateInventoryItem message)
         {
             var item = _repository.GetById(message.InventoryItemId);
             item.Deactivate();
             _repository.Save(item, message.OriginalVersion);
+            
+            return Unit.Value;
         }
 
-        public void Handle(RemoveItemsFromInventory message)
+        public Unit Handle(RemoveItemsFromInventory message)
         {
             var item = _repository.GetById(message.InventoryItemId);
             item.Remove(message.Count);
             _repository.Save(item, message.OriginalVersion);
+
+            return Unit.Value;
         }
 
-        public void Handle(CheckInItemsToInventory message)
+        public Unit Handle(CheckInItemsToInventory message)
         {
             var item = _repository.GetById(message.InventoryItemId);
             item.CheckIn(message.Count);
             _repository.Save(item, message.OriginalVersion);
+
+            return Unit.Value;
         }
 
-        public void Handle(RenameInventoryItem message)
+        public Unit Handle(RenameInventoryItem message)
         {
             var item = _repository.GetById(message.InventoryItemId);
             item.ChangeName(message.NewName);
             _repository.Save(item, message.OriginalVersion);
+
+            return Unit.Value;
         }
     }
 }

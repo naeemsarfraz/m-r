@@ -7,7 +7,8 @@ namespace SimpleCQRS
     {
     }
 
-    public class DeactivateInventoryItem : Command {
+    public class DeactivateInventoryItem : IRequest<Unit>
+    {
         public readonly Guid InventoryItemId;
         public readonly int OriginalVersion;
 
@@ -18,7 +19,8 @@ namespace SimpleCQRS
         }
     }
 
-    public class CreateInventoryItem : Command, IRequest<Unit> {
+    public class CreateInventoryItem : IRequest<Unit>
+    {
         public readonly Guid InventoryItemId;
         public readonly string Name;
 
@@ -29,7 +31,8 @@ namespace SimpleCQRS
         }
     }
 
-    public class RenameInventoryItem : Command {
+    public class RenameInventoryItem : IRequest<Unit>
+    {
         public readonly Guid InventoryItemId;
         public readonly string NewName;
         public readonly int OriginalVersion;
@@ -42,7 +45,8 @@ namespace SimpleCQRS
         }
     }
 
-    public class CheckInItemsToInventory : Command {
+    public class CheckInItemsToInventory : IRequest<Unit>
+    {
         public Guid InventoryItemId;
         public readonly int Count;
         public readonly int OriginalVersion;
@@ -54,7 +58,8 @@ namespace SimpleCQRS
         }
     }
 
-    public class RemoveItemsFromInventory : Command {
+    public class RemoveItemsFromInventory : IRequest<Unit>
+    {
         public Guid InventoryItemId;
         public readonly int Count;
         public readonly int OriginalVersion;
