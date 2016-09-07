@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
+using MediatR;
 using SimpleCQRS;
 
 namespace CQRSGui.Controllers
@@ -7,11 +8,13 @@ namespace CQRSGui.Controllers
     [HandleError]
     public class HomeController : Controller
     {
+        private IMediator _mediator;
         private FakeBus _bus;
         private ReadModelFacade _readmodel;
 
         public HomeController()
         {
+            _mediator = ServiceLocator.Mediator;
             _bus = ServiceLocator.Bus;
             _readmodel = new ReadModelFacade();
         }
@@ -37,7 +40,8 @@ namespace CQRSGui.Controllers
         [HttpPost]
         public ActionResult Add(string name)
         {
-            _bus.Send(new CreateInventoryItem(Guid.NewGuid(), name));
+            _mediator.Send(new CreateInventoryItem(Guid.NewGuid(), name));
+            //_bus.Send(new CreateInventoryItem(Guid.NewGuid(), name));
 
             return RedirectToAction("Index");
         }

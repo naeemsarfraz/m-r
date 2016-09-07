@@ -1,4 +1,6 @@
 using System;
+using MediatR;
+
 namespace SimpleCQRS
 {
     public class Command : Message
@@ -16,7 +18,7 @@ namespace SimpleCQRS
         }
     }
 
-    public class CreateInventoryItem : Command {
+    public class CreateInventoryItem : Command, IRequest<Unit> {
         public readonly Guid InventoryItemId;
         public readonly string Name;
 

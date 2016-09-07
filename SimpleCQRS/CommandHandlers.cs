@@ -1,8 +1,10 @@
-﻿using System;
+﻿using MediatR;
+using System;
 
 namespace SimpleCQRS
 {
-    public class InventoryCommandHandlers
+    public class InventoryCommandHandlers: 
+        IRequestHandler<CreateInventoryItem, Unit>
     {
         private readonly IRepository<InventoryItem> _repository;
 
@@ -11,10 +13,12 @@ namespace SimpleCQRS
             _repository = repository;
         }
 
-        public void Handle(CreateInventoryItem message)
+        public Unit Handle(CreateInventoryItem message)
         {
             var item = new InventoryItem(message.InventoryItemId, message.Name);
             _repository.Save(item, -1);
+
+            return Unit.Value;
         }
 
         public void Handle(DeactivateInventoryItem message)

@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using MediatR;
 using SimpleCQRS;
 
 namespace CQRSGui
@@ -37,7 +36,7 @@ namespace CQRSGui
             var rep = new Repository<InventoryItem>(storage);
             var commands = new InventoryCommandHandlers(rep);
             bus.RegisterHandler<CheckInItemsToInventory>(commands.Handle);
-            bus.RegisterHandler<CreateInventoryItem>(commands.Handle);
+            //bus.RegisterHandler<CreateInventoryItem>(commands.Handle);
             bus.RegisterHandler<DeactivateInventoryItem>(commands.Handle);
             bus.RegisterHandler<RemoveItemsFromInventory>(commands.Handle);
             bus.RegisterHandler<RenameInventoryItem>(commands.Handle);
@@ -52,6 +51,20 @@ namespace CQRSGui
             bus.RegisterHandler<InventoryItemRenamed>(list.Handle);
             bus.RegisterHandler<InventoryItemDeactivated>(list.Handle);
             ServiceLocator.Bus = bus;
+
+            ServiceLocator.Mediator = new Mediator((t) =>
+            {
+                var type = typeof(InventoryCommandHandlers).Assembly
+                    .GetTypes()
+                    .First(t.IsAssignableFrom);
+                return Activator.CreateInstance(type, rep);
+            }, (t) =>
+            {
+                return typeof(InventoryCommandHandlers).Assembly
+                    .GetTypes()
+                    .Where(t.IsAssignableFrom)
+                    .Select(type => Activator.CreateInstance(type, Console.Out));
+            });
         }
     }
 }
