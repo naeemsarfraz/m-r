@@ -104,6 +104,7 @@
     <Compile Include="Events.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="ReadModel.cs" />
+    <Compile Include="Service.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
