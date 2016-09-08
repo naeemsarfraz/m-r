@@ -3,11 +3,11 @@ using MediatR;
 
 namespace SimpleCQRS
 {
-    public class Command : Message
+    public class Command : Message, IRequest<Unit>
     {
     }
 
-    public class DeactivateInventoryItem : IRequest<Unit>
+    public class DeactivateInventoryItem : Command
     {
         public readonly Guid InventoryItemId;
         public readonly int OriginalVersion;
@@ -19,7 +19,7 @@ namespace SimpleCQRS
         }
     }
 
-    public class CreateInventoryItem : IRequest<Unit>
+    public class CreateInventoryItem : Command
     {
         public readonly Guid InventoryItemId;
         public readonly string Name;
@@ -31,7 +31,7 @@ namespace SimpleCQRS
         }
     }
 
-    public class RenameInventoryItem : IRequest<Unit>
+    public class RenameInventoryItem : Command
     {
         public readonly Guid InventoryItemId;
         public readonly string NewName;
@@ -45,7 +45,7 @@ namespace SimpleCQRS
         }
     }
 
-    public class CheckInItemsToInventory : IRequest<Unit>
+    public class CheckInItemsToInventory : Command
     {
         public Guid InventoryItemId;
         public readonly int Count;
@@ -58,7 +58,7 @@ namespace SimpleCQRS
         }
     }
 
-    public class RemoveItemsFromInventory : IRequest<Unit>
+    public class RemoveItemsFromInventory : Command
     {
         public Guid InventoryItemId;
         public readonly int Count;

@@ -12,7 +12,7 @@ namespace SimpleCQRS
 
     public class EventStore : IEventStore
     {
-        private readonly IEventPublisher _publisher;
+        private readonly Action<Event> _publisher;
 
         private struct EventDescriptor
         {
@@ -29,7 +29,7 @@ namespace SimpleCQRS
             }
         }
 
-        public EventStore(IEventPublisher publisher)
+        public EventStore(Action<Event> publisher)
         {
             _publisher = publisher;
         }
@@ -65,7 +65,7 @@ namespace SimpleCQRS
                 eventDescriptors.Add(new EventDescriptor(aggregateId,@event,i));
 
                 // publish current event to the bus for further processing by subscribers
-                _publisher.Publish(@event);
+                _publisher(@event);
             }
         }
 

@@ -30,36 +30,22 @@ namespace CQRSGui
 
             RegisterRoutes(RouteTable.Routes);
 
-            var bus = new FakeBus();
-
-            var storage = new EventStore(bus);
-            var rep = new Repository<InventoryItem>(storage);
-            var commands = new InventoryCommandHandlers(rep);
-            var detail = new InventoryItemDetailView();
-            bus.RegisterHandler<InventoryItemCreated>(detail.Handle);
-            bus.RegisterHandler<InventoryItemDeactivated>(detail.Handle);
-            bus.RegisterHandler<InventoryItemRenamed>(detail.Handle);
-            bus.RegisterHandler<ItemsCheckedInToInventory>(detail.Handle);
-            bus.RegisterHandler<ItemsRemovedFromInventory>(detail.Handle);
-            var list = new InventoryListView();
-            bus.RegisterHandler<InventoryItemCreated>(list.Handle);
-            bus.RegisterHandler<InventoryItemRenamed>(list.Handle);
-            bus.RegisterHandler<InventoryItemDeactivated>(list.Handle);
-            ServiceLocator.Bus = bus;
-
             ServiceLocator.Mediator = new Mediator((t) =>
             {
                 var type = typeof(InventoryCommandHandlers).Assembly
                     .GetTypes()
                     .First(t.IsAssignableFrom);
-                return Activator.CreateInstance(type, rep);
+                return Activator.CreateInstance(type, ServiceLocator.InventoryRepository);
             }, (t) =>
             {
                 return typeof(InventoryCommandHandlers).Assembly
                     .GetTypes()
                     .Where(t.IsAssignableFrom)
-                    .Select(type => Activator.CreateInstance(type, Console.Out));
+                    .Select(Activator.CreateInstance);
             });
+            
+            var storage = new EventStore((e) => { ServiceLocator.Mediator.Publish(e); });
+            ServiceLocator.InventoryRepository = new Repository<InventoryItem>(storage);
         }
     }
 }

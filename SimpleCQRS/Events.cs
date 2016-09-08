@@ -1,12 +1,15 @@
 using System;
+using MediatR;
+
 namespace SimpleCQRS
 {
-    public class Event : Message
+    public class Event : Message, INotification
     {
         public int Version;
     }
     
-    public class InventoryItemDeactivated : Event {
+    public class InventoryItemDeactivated : Event
+    {
         public readonly Guid Id;
 
         public InventoryItemDeactivated(Guid id)
@@ -15,7 +18,8 @@ namespace SimpleCQRS
         }
     }
 
-    public class InventoryItemCreated : Event {
+    public class InventoryItemCreated : Event
+    {
         public readonly Guid Id;
         public readonly string Name;
         public InventoryItemCreated(Guid id, string name) {

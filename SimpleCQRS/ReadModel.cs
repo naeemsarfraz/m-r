@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MediatR;
+using System;
 using System.Collections.Generic;
 
 namespace SimpleCQRS
@@ -37,7 +38,10 @@ namespace SimpleCQRS
         }
     }
 
-    public class InventoryListView : Handles<InventoryItemCreated>, Handles<InventoryItemRenamed>, Handles<InventoryItemDeactivated>
+    public class InventoryListView :
+        INotificationHandler<InventoryItemCreated>,
+        INotificationHandler<InventoryItemRenamed>,
+        INotificationHandler<InventoryItemDeactivated>
     {
         public void Handle(InventoryItemCreated message)
         {
@@ -56,7 +60,12 @@ namespace SimpleCQRS
         }
     }
 
-    public class InventoryItemDetailView : Handles<InventoryItemCreated>, Handles<InventoryItemDeactivated>, Handles<InventoryItemRenamed>, Handles<ItemsRemovedFromInventory>, Handles<ItemsCheckedInToInventory>
+    public class InventoryItemDetailView :
+        INotificationHandler<InventoryItemCreated>,
+        INotificationHandler<InventoryItemDeactivated>,
+        INotificationHandler<InventoryItemRenamed>,
+        INotificationHandler<ItemsRemovedFromInventory>,
+        INotificationHandler<ItemsCheckedInToInventory>
     {
         public void Handle(InventoryItemCreated message)
         {
