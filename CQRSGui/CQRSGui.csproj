@@ -137,6 +137,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ServiceController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -162,6 +163,13 @@
     <Content Include="Scripts\MicrosoftMvcAjax.js" />
     <Content Include="Scripts\MicrosoftMvcValidation.debug.js" />
     <Content Include="Scripts\MicrosoftMvcValidation.js" />
+    <Content Include="Views\Service\Add.aspx" />
+    <Content Include="Views\Service\ChangeName.aspx" />
+    <Content Include="Views\Service\CheckIn.aspx" />
+    <Content Include="Views\Service\Deactivate.aspx" />
+    <Content Include="Views\Service\Details.aspx" />
+    <Content Include="Views\Service\Index.aspx" />
+    <Content Include="Views\Service\Remove.aspx" />
     <Content Include="Views\Home\Add.aspx" />
     <Content Include="Views\Home\ChangeName.aspx" />
     <Content Include="Views\Home\CheckIn.aspx" />
