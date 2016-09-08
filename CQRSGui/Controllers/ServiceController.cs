@@ -8,13 +8,15 @@ namespace CQRSGui.Controllers
     [HandleError]
     public class ServiceController : Controller
     {
-        private IMediator _mediator;
         private ReadModelFacade _readmodel;
+        private readonly IRepository<InventoryItem> _repository;
+        private readonly InventoryItemService _service;
 
         public ServiceController()
         {
-            _mediator = ServiceLocator.Mediator;
             _readmodel = new ReadModelFacade();
+            _repository = ServiceLocator.InventoryRepository;
+            _service = new InventoryItemService(_readmodel, _repository);
         }
 
         public ActionResult Index()
@@ -39,7 +41,8 @@ namespace CQRSGui.Controllers
         [HttpPost]
         public ActionResult Add(string name)
         {
-            _mediator.Send(new CreateInventoryItem(Guid.NewGuid(), name));
+            var item = new InventoryItem(Guid.NewGuid(), name);
+            _repository.Save(item, -1);
 
             return RedirectToAction("Index");
         }
@@ -54,7 +57,9 @@ namespace CQRSGui.Controllers
         [HttpPost]
         public ActionResult ChangeName(Guid id, string name, int version)
         {
-            _mediator.Send(new RenameInventoryItem(id, name, version));
+            var item = _repository.GetById(id);
+            item.ChangeName(name);
+            _repository.Save(item, version);
 
             return RedirectToAction("Index");
         }
@@ -69,7 +74,9 @@ namespace CQRSGui.Controllers
         [HttpPost]
         public ActionResult Deactivate(Guid id, int version)
         {
-            _mediator.Send(new DeactivateInventoryItem(id, version));
+            var item = _repository.GetById(id);
+            item.Deactivate();
+            _repository.Save(item, version);
 
             return RedirectToAction("Index");
         }
@@ -84,7 +91,9 @@ namespace CQRSGui.Controllers
         [HttpPost]
         public ActionResult CheckIn(Guid id, int number, int version)
         {
-            _mediator.Send(new CheckInItemsToInventory(id, number, version));
+            var item = _repository.GetById(id);
+            item.CheckIn(number);
+            _repository.Save(item, version);
 
             return RedirectToAction("Index");
         }
@@ -99,7 +108,9 @@ namespace CQRSGui.Controllers
         [HttpPost]
         public ActionResult Remove(Guid id, int number, int version)
         {
-            _mediator.Send(new RemoveItemsFromInventory(id, number, version));
+            var item = _repository.GetById(id);
+            item.Remove(number);
+            _repository.Save(item, version);
 
             return RedirectToAction("Index");
         }
